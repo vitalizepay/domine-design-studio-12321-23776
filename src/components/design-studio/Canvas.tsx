@@ -1,4 +1,4 @@
-import { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import { Stage, Layer, Image as KonvaImage, Transformer } from 'react-konva';
 import { useCanvasStore } from '@/store/useCanvasStore';
 import Konva from 'konva';
@@ -105,9 +105,9 @@ const CanvasImage = ({
   onTransform,
 }: CanvasImageProps) => {
   const imageRef = useRef<Konva.Image>(null);
-  const [image, setImage] = React.useState<HTMLImageElement>();
+  const [image, setImage] = useState<HTMLImageElement>();
 
-  React.useEffect(() => {
+  useEffect(() => {
     const img = new window.Image();
     img.crossOrigin = 'anonymous';
     img.src = url;
@@ -158,5 +158,3 @@ const CanvasImage = ({
   );
 };
 
-// Fix React import for CanvasImage
-import React from 'react';
