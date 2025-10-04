@@ -32,6 +32,7 @@ import { AIPanel } from "@/components/design-studio/AIPanel";
 import { LayersPanel } from "@/components/design-studio/LayersPanel";
 import { UploadsPanel } from "@/components/design-studio/UploadsPanel";
 import { BrandKitsPanel } from "@/components/design-studio/BrandKitsPanel";
+import { Canvas } from "@/components/design-studio/Canvas";
 
 const DesignStudio = () => {
   const [selectedTool, setSelectedTool] = useState<string>("template");
@@ -177,16 +178,7 @@ const DesignStudio = () => {
             <div className="relative">
               {/* Canvas Area */}
               <div className="w-[700px] h-[700px] bg-card border-2 border-border rounded-lg shadow-lg flex items-center justify-center">
-                <div className="w-[500px] h-[600px] bg-muted/30 rounded-lg flex items-center justify-center border-2 border-dashed border-border">
-                  <div className="text-center space-y-3">
-                    <Sparkles className="w-16 h-16 mx-auto text-primary animate-pulse" />
-                    <h3 className="text-2xl font-bold text-foreground">T-Shirt Canvas</h3>
-                    <p className="text-muted-foreground">Start designing your custom tee</p>
-                    <p className="text-sm text-muted-foreground">
-                      Select a tool from the left sidebar to begin
-                    </p>
-                  </div>
-                </div>
+                <Canvas />
               </div>
 
               {/* Bottom Toolbar */}
