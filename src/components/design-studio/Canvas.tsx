@@ -1,29 +1,32 @@
 import React, { useRef, useEffect, useState } from 'react';
 import { Stage, Layer, Image as KonvaImage, Transformer } from 'react-konva';
 import { useCanvasStore } from '@/store/useCanvasStore';
-import type Konva from 'konva';
+
+// ✅ Type-only imports (no runtime)
+import type * as Konva from 'konva';
+import type { KonvaEventObject } from 'konva/lib/Node';
 
 export const Canvas = () => {
   const objects = useCanvasStore((state) => state.objects);
   const selectedId = useCanvasStore((state) => state.selectedId);
   const setSelectedId = useCanvasStore((state) => state.setSelectedId);
   const updateObject = useCanvasStore((state) => state.updateObject);
-  
-  const transformerRef = useRef<Konva.Transformer>(null);
-  const stageRef = useRef<Konva.Stage>(null);
+
+  const transformerRef = useRef<Konva.Transformer | null>(null);
+  const stageRef = useRef<Konva.Stage | null>(null);
 
   useEffect(() => {
     if (selectedId && transformerRef.current) {
       const stage = transformerRef.current.getStage();
       const selectedNode = stage?.findOne(`#${selectedId}`);
       if (selectedNode) {
-        transformerRef.current.nodes([selectedNode]);
+        transformerRef.current.nodes([selectedNode as Konva.Node]);
         transformerRef.current.getLayer()?.batchDraw();
       }
     }
   }, [selectedId]);
 
-  const handleStageClick = (e: Konva.KonvaEventObject<MouseEvent>) => {
+  const handleStageClick = (e: KonvaEventObject<MouseEvent>) => {
     // Deselect when clicking on empty area
     if (e.target === e.target.getStage()) {
       setSelectedId(null);
@@ -35,13 +38,11 @@ export const Canvas = () => {
       <Stage
         width={700}
         height={700}
-        ref={stageRef}
+        ref={stageRef as any}
         onClick={handleStageClick}
         className="bg-card border-2 border-border rounded-lg shadow-lg"
       >
         <Layer>
-
-          {/* Render all canvas objects */}
           {objects.map((obj) => {
             if (obj.type === 'image' && obj.url) {
               return (
@@ -64,12 +65,9 @@ export const Canvas = () => {
           })}
 
           <Transformer
-            ref={transformerRef}
+            ref={transformerRef as any}
             boundBoxFunc={(oldBox, newBox) => {
-              // Limit resize to reasonable bounds
-              if (newBox.width < 20 || newBox.height < 20) {
-                return oldBox;
-              }
+              if (newBox.width < 20 || newBox.height < 20) return oldBox;
               return newBox;
             }}
           />
@@ -104,22 +102,20 @@ const CanvasImage = ({
   onSelect,
   onTransform,
 }: CanvasImageProps) => {
-  const imageRef = useRef<Konva.Image>(null);
+  const imageRef = useRef<Konva.Image | null>(null);
   const [image, setImage] = useState<HTMLImageElement>();
 
   useEffect(() => {
     const img = new window.Image();
     img.crossOrigin = 'anonymous';
     img.src = url;
-    img.onload = () => {
-      setImage(img);
-    };
+    img.onload = () => setImage(img);
   }, [url]);
 
   return (
     <KonvaImage
       id={id}
-      ref={imageRef}
+      ref={imageRef as any}
       image={image}
       x={x}
       y={y}
@@ -130,31 +126,26 @@ const CanvasImage = ({
       onClick={onSelect}
       onTap={onSelect}
       onDragEnd={(e) => {
-        onTransform({
-          x: e.target.x(),
-          y: e.target.y(),
-        });
+        onTransform({ x: e.target.x(), y: e.target.y() });
       }}
-      onTransformEnd={(e) => {
+      onTransformEnd={() => {
         const node = imageRef.current;
-        if (node) {
-          const scaleX = node.scaleX();
-          const scaleY = node.scaleY();
+        if (!node) return;
 
-          // Reset scale and apply to width/height
-          node.scaleX(1);
-          node.scaleY(1);
+        const scaleX = node.scaleX();
+        const scaleY = node.scaleY();
 
-          onTransform({
-            x: node.x(),
-            y: node.y(),
-            width: Math.max(20, node.width() * scaleX),
-            height: Math.max(20, node.height() * scaleY),
-            rotation: node.rotation(),
-          });
-        }
+        node.scaleX(1);
+        node.scaleY(1);
+
+        onTransform({
+          x: node.x(),
+          y: node.y(),
+          width: Math.max(20, node.width() * scaleX),
+          height: Math.max(20, node.height() * scaleY),
+          rotation: node.rotation(),
+        });
       }}
     />
   );
 };
-
