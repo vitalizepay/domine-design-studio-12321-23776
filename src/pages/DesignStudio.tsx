@@ -113,7 +113,7 @@ const DesignStudio = () => {
             <Download className="h-4 w-4 mr-2" />
             Export
           </Button>
-          <Button className="h-9 bg-gradient-violet">
+          <Button className="h-9 bg-gradient-to-r from-primary to-primary/80">
             Share
           </Button>
         </div>
@@ -251,11 +251,11 @@ const DesignStudio = () => {
             </div>
 
             <div className="pt-6 space-y-2 border-t border-border">
-              <Button className="w-full bg-gradient-violet">
+              <Button className="w-full bg-gradient-to-r from-primary to-primary/80">
                 <Save className="w-4 h-4 mr-2" />
                 Save Design
               </Button>
-              <Button className="w-full bg-gradient-orange">
+              <Button className="w-full bg-gradient-to-r from-accent to-accent/80">
                 <ShoppingCart className="w-4 h-4 mr-2" />
                 Add to Cart
               </Button>
