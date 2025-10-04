@@ -9,6 +9,10 @@ export default defineConfig(({ mode }) => ({
     host: "::",
     port: 8080,
   },
+  cacheDir: "node_modules/.vite-domine", // bust Vite prebundle cache
+  optimizeDeps: {
+    exclude: ["react-konva", "konva"], // avoid stale prebundled versions
+  },
   plugins: [react(), mode === "development" && componentTagger()].filter(Boolean),
   resolve: {
     alias: {
