@@ -7,16 +7,35 @@ import {
   Layers, 
   Upload, 
   Sparkles,
-  MessageSquare,
   Layout,
   Palette,
   Heart,
-  Package
+  Package,
+  X,
+  Undo2,
+  Redo2,
+  ZoomIn,
+  ZoomOut,
+  Save,
+  Download,
+  ShoppingCart,
+  Eye
 } from "lucide-react";
 import Navbar from "@/components/Navbar";
+import { MenuDropdown } from "@/components/design-studio/MenuDropdown";
+import { TemplatesPanel } from "@/components/design-studio/TemplatesPanel";
+import { TextPanel } from "@/components/design-studio/TextPanel";
+import { IllustrationsPanel } from "@/components/design-studio/IllustrationsPanel";
+import { ImagesPanel } from "@/components/design-studio/ImagesPanel";
+import { TexturesPanel } from "@/components/design-studio/TexturesPanel";
+import { AIPanel } from "@/components/design-studio/AIPanel";
+import { LayersPanel } from "@/components/design-studio/LayersPanel";
+import { UploadsPanel } from "@/components/design-studio/UploadsPanel";
+import { BrandKitsPanel } from "@/components/design-studio/BrandKitsPanel";
 
 const DesignStudio = () => {
   const [selectedTool, setSelectedTool] = useState<string>("template");
+  const [isPanelOpen, setIsPanelOpen] = useState(true);
 
   const tools = [
     { id: "template", name: "Templates", icon: Layout },
@@ -31,174 +50,223 @@ const DesignStudio = () => {
     { id: "layers", name: "Layers", icon: Layers },
   ];
 
+  const renderPanel = () => {
+    switch (selectedTool) {
+      case "template":
+        return <TemplatesPanel />;
+      case "text":
+        return <TextPanel />;
+      case "illustrations":
+        return <IllustrationsPanel />;
+      case "images":
+        return <ImagesPanel />;
+      case "textures":
+        return <TexturesPanel />;
+      case "ai":
+        return <AIPanel />;
+      case "layers":
+        return <LayersPanel />;
+      case "uploads":
+        return <UploadsPanel />;
+      case "brand":
+        return <BrandKitsPanel />;
+      default:
+        return <div className="p-4 text-muted-foreground">Select a tool to get started</div>;
+    }
+  };
+
   return (
     <div className="min-h-screen bg-background flex flex-col">
-      <Navbar />
+      {/* Top Navbar */}
+      <header className="h-14 border-b border-border bg-card flex items-center justify-between px-4">
+        <div className="flex items-center gap-3">
+          <MenuDropdown />
+          <span className="text-sm font-semibold text-foreground">Design a T-shirt</span>
+        </div>
+        
+        <div className="flex items-center gap-2">
+          <Button variant="ghost" size="icon" className="h-9 w-9">
+            <Undo2 className="h-4 w-4" />
+          </Button>
+          <Button variant="ghost" size="icon" className="h-9 w-9">
+            <Redo2 className="h-4 w-4" />
+          </Button>
+          <div className="h-6 w-px bg-border mx-1" />
+          <Button variant="ghost" size="icon" className="h-9 w-9">
+            <ZoomOut className="h-4 w-4" />
+          </Button>
+          <span className="text-sm text-foreground min-w-[3rem] text-center">100%</span>
+          <Button variant="ghost" size="icon" className="h-9 w-9">
+            <ZoomIn className="h-4 w-4" />
+          </Button>
+          <div className="h-6 w-px bg-border mx-1" />
+          <Button variant="ghost" size="sm" className="h-9">
+            <Eye className="h-4 w-4 mr-2" />
+            Preview
+          </Button>
+          <Button variant="ghost" size="sm" className="h-9">
+            <Save className="h-4 w-4 mr-2" />
+            Save
+          </Button>
+          <Button variant="ghost" size="sm" className="h-9">
+            <Download className="h-4 w-4 mr-2" />
+            Export
+          </Button>
+          <Button className="h-9 bg-gradient-violet">
+            Share
+          </Button>
+        </div>
+      </header>
       
       <div className="flex flex-1 overflow-hidden">
-        {/* Left Sidebar - Tools */}
-        <aside className="w-20 border-r border-border bg-card">
-          <div className="flex flex-col items-center gap-2 py-4">
-            {tools.map((tool) => {
-              const Icon = tool.icon;
-              return (
-                <Button
-                  key={tool.id}
-                  variant={selectedTool === tool.id ? "default" : "ghost"}
-                  size="icon"
-                  className={`w-14 h-14 ${
-                    selectedTool === tool.id 
-                      ? "bg-gradient-violet shadow-glow" 
-                      : "hover:bg-secondary"
-                  }`}
-                  onClick={() => setSelectedTool(tool.id)}
-                  title={tool.name}
-                >
-                  <Icon className="w-6 h-6" />
-                </Button>
-              );
-            })}
-          </div>
+        {/* Left Sidebar - Tool Icons */}
+        <aside className="w-12 border-r border-border bg-card flex flex-col items-center py-3 gap-1">
+          {tools.map((tool) => {
+            const Icon = tool.icon;
+            return (
+              <Button
+                key={tool.id}
+                variant="ghost"
+                size="icon"
+                className={`w-10 h-10 rounded ${
+                  selectedTool === tool.id 
+                    ? "bg-primary/10 text-primary" 
+                    : "text-muted-foreground hover:text-foreground hover:bg-muted"
+                }`}
+                onClick={() => {
+                  if (selectedTool === tool.id) {
+                    setIsPanelOpen(!isPanelOpen);
+                  } else {
+                    setSelectedTool(tool.id);
+                    setIsPanelOpen(true);
+                  }
+                }}
+                title={tool.name}
+              >
+                <Icon className="w-5 h-5" />
+              </Button>
+            );
+          })}
         </aside>
 
         {/* Tool Options Panel */}
-        <aside className="w-80 border-r border-border bg-card p-4 overflow-y-auto">
-          <div className="space-y-4">
-            <div className="flex items-center gap-2 mb-6">
-              <Sparkles className="w-5 h-5 text-primary" />
-              <h2 className="text-xl font-bold text-foreground">
+        {isPanelOpen && (
+          <aside className="w-80 border-r border-border bg-card overflow-hidden flex flex-col">
+            <div className="flex items-center justify-between p-4 border-b border-border">
+              <h2 className="text-lg font-bold text-foreground">
                 {tools.find(t => t.id === selectedTool)?.name}
               </h2>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="h-8 w-8"
+                onClick={() => setIsPanelOpen(false)}
+              >
+                <X className="h-4 w-4" />
+              </Button>
             </div>
-
-            {selectedTool === "ai" && (
-              <div className="space-y-4">
-                <div className="p-4 bg-gradient-violet/10 border border-primary rounded-lg">
-                  <div className="flex items-center gap-2 mb-2">
-                    <MessageSquare className="w-5 h-5 text-primary" />
-                    <span className="font-semibold text-foreground">AI Assistant</span>
-                  </div>
-                  <p className="text-sm text-muted-foreground mb-4">
-                    What can I help you create?
-                  </p>
-                  <input
-                    type="text"
-                    placeholder="Describe your design idea..."
-                    className="w-full px-4 py-2 bg-background border border-border rounded-lg text-foreground placeholder:text-muted-foreground"
-                  />
-                </div>
-              </div>
-            )}
-
-            {selectedTool === "template" && (
-              <div className="grid grid-cols-2 gap-3">
-                {[1, 2, 3, 4, 5, 6].map((i) => (
-                  <Card 
-                    key={i} 
-                    className="aspect-square bg-secondary hover:bg-primary/10 cursor-pointer transition-all hover:shadow-glow border-border"
-                  >
-                    <div className="w-full h-full flex items-center justify-center">
-                      <span className="text-muted-foreground text-sm">Template {i}</span>
-                    </div>
-                  </Card>
-                ))}
-              </div>
-            )}
-
-            {selectedTool === "text" && (
-              <div className="space-y-4">
-                <Button className="w-full bg-gradient-violet">
-                  <Type className="w-4 h-4 mr-2" />
-                  Add Text
-                </Button>
-                <div className="space-y-2">
-                  <label className="text-sm text-muted-foreground">Quick Text Styles</label>
-                  {["Heading", "Subheading", "Body Text"].map((style) => (
-                    <Button 
-                      key={style} 
-                      variant="outline" 
-                      className="w-full justify-start border-border"
-                    >
-                      {style}
-                    </Button>
-                  ))}
-                </div>
-              </div>
-            )}
-          </div>
-        </aside>
+            <div className="flex-1 overflow-y-auto p-4">
+              {renderPanel()}
+            </div>
+          </aside>
+        )}
 
         {/* Canvas - Center */}
-        <main className="flex-1 bg-muted/30 p-8 overflow-auto">
-          <div className="max-w-4xl mx-auto">
-            <Card className="aspect-square bg-card border-2 border-border shadow-glow flex items-center justify-center">
-              <div className="text-center space-y-4">
-                <div className="w-96 h-96 bg-muted/50 rounded-lg flex items-center justify-center border-2 border-dashed border-border">
-                  <div className="text-center space-y-2">
-                    <Sparkles className="w-12 h-12 mx-auto text-primary animate-glow-pulse" />
-                    <h3 className="text-xl font-semibold text-foreground">T-Shirt Canvas</h3>
+        <main className="flex-1 bg-muted/20 overflow-auto">
+          <div className="h-full flex items-center justify-center p-8">
+            <div className="relative">
+              {/* Canvas Area */}
+              <div className="w-[700px] h-[700px] bg-card border-2 border-border rounded-lg shadow-lg flex items-center justify-center">
+                <div className="w-[500px] h-[600px] bg-muted/30 rounded-lg flex items-center justify-center border-2 border-dashed border-border">
+                  <div className="text-center space-y-3">
+                    <Sparkles className="w-16 h-16 mx-auto text-primary animate-pulse" />
+                    <h3 className="text-2xl font-bold text-foreground">T-Shirt Canvas</h3>
                     <p className="text-muted-foreground">Start designing your custom tee</p>
+                    <p className="text-sm text-muted-foreground">
+                      Select a tool from the left sidebar to begin
+                    </p>
                   </div>
                 </div>
               </div>
-            </Card>
+
+              {/* Bottom Toolbar */}
+              <div className="absolute -bottom-16 left-1/2 -translate-x-1/2 flex items-center gap-2 bg-card border border-border rounded-lg px-4 py-2 shadow-lg">
+                <Button variant="ghost" size="icon" className="h-8 w-8">
+                  <Undo2 className="h-4 w-4" />
+                </Button>
+                <Button variant="ghost" size="icon" className="h-8 w-8">
+                  <Redo2 className="h-4 w-4" />
+                </Button>
+                <div className="h-6 w-px bg-border mx-1" />
+                <Button variant="ghost" size="sm" className="h-8">
+                  14%
+                </Button>
+                <div className="h-6 w-px bg-border mx-1" />
+                <Button variant="ghost" size="icon" className="h-8 w-8">
+                  <ZoomOut className="h-4 w-4" />
+                </Button>
+                <Button variant="ghost" size="icon" className="h-8 w-8">
+                  <ZoomIn className="h-4 w-4" />
+                </Button>
+              </div>
+            </div>
           </div>
         </main>
 
-        {/* Right Sidebar - Properties */}
+        {/* Right Sidebar - Project Info & Tools */}
         <aside className="w-80 border-l border-border bg-card p-4 overflow-y-auto">
           <div className="space-y-6">
-            <h2 className="text-xl font-bold text-foreground">Properties</h2>
-            
-            <div className="space-y-4">
-              <div>
-                <label className="text-sm text-muted-foreground mb-2 block">Font Size</label>
-                <input 
-                  type="range" 
-                  min="12" 
-                  max="72" 
-                  className="w-full accent-primary"
-                />
-              </div>
-
-              <div>
-                <label className="text-sm text-muted-foreground mb-2 block">Font Style</label>
-                <select className="w-full px-4 py-2 bg-background border border-border rounded-lg text-foreground">
-                  <option>Regular</option>
-                  <option>Bold</option>
-                  <option>Italic</option>
-                </select>
-              </div>
-
-              <div>
-                <label className="text-sm text-muted-foreground mb-2 block">Color</label>
-                <div className="grid grid-cols-5 gap-2">
-                  {["#9333ea", "#f97316", "#c0c0c0", "#ffffff", "#000000"].map((color) => (
-                    <button
-                      key={color}
-                      className="w-full aspect-square rounded-lg border-2 border-border hover:border-primary transition-colors"
-                      style={{ backgroundColor: color }}
+            <div>
+              <h3 className="text-sm font-semibold text-foreground mb-3">Project Colors</h3>
+              <div className="space-y-2">
+                {[
+                  { color: "#000000", name: "000000", usage: "100%" },
+                  { color: "#FFFFFF", name: "FFFFFF", usage: "100%" },
+                  { color: "#9A7D52", name: "9A7D52", usage: "100%" },
+                  { color: "#F7EBDE", name: "F7EBDE", usage: "100%" },
+                ].map((item) => (
+                  <div key={item.color} className="flex items-center gap-3">
+                    <div
+                      className="w-8 h-8 rounded border-2 border-border"
+                      style={{ backgroundColor: item.color }}
                     />
-                  ))}
-                </div>
+                    <span className="text-sm text-foreground font-mono flex-1">{item.name}</span>
+                    <span className="text-sm text-muted-foreground">{item.usage}</span>
+                  </div>
+                ))}
               </div>
+              <Button variant="link" className="text-sm text-primary p-0 h-auto mt-2">
+                Browse Color Palettes
+              </Button>
+            </div>
 
-              <div>
-                <label className="text-sm text-muted-foreground mb-2 block">Opacity</label>
-                <input 
-                  type="range" 
-                  min="0" 
-                  max="100" 
-                  className="w-full accent-primary"
-                />
+            <div>
+              <h3 className="text-sm font-semibold text-foreground mb-3">Tools</h3>
+              <div className="space-y-2">
+                <Button
+                  variant="outline"
+                  className="w-full justify-start border-border"
+                >
+                  <Package className="w-4 h-4 mr-2" />
+                  Mockup
+                </Button>
+                <Button
+                  variant="outline"
+                  className="w-full justify-start border-border text-muted-foreground"
+                >
+                  <Sparkles className="w-4 h-4 mr-2" />
+                  Add Smartboard
+                </Button>
               </div>
             </div>
 
-            <div className="pt-6 space-y-2">
-              <Button className="w-full bg-gradient-violet hover:shadow-glow">
+            <div className="pt-6 space-y-2 border-t border-border">
+              <Button className="w-full bg-gradient-violet">
+                <Save className="w-4 h-4 mr-2" />
                 Save Design
               </Button>
-              <Button className="w-full bg-gradient-orange hover:shadow-glow-orange">
+              <Button className="w-full bg-gradient-orange">
+                <ShoppingCart className="w-4 h-4 mr-2" />
                 Add to Cart
               </Button>
             </div>
