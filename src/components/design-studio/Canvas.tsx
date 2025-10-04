@@ -1,7 +1,7 @@
 import React, { useRef, useEffect, useState } from 'react';
 import { Stage, Layer, Image as KonvaImage, Transformer } from 'react-konva';
 import { useCanvasStore } from '@/store/useCanvasStore';
-import Konva from 'konva';
+import type Konva from 'konva';
 
 export const Canvas = () => {
   const objects = useCanvasStore((state) => state.objects);
