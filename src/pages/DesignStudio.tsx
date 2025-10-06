@@ -193,15 +193,15 @@ const DesignStudio = () => {
 
               {/* Bottom Toolbar */}
               <div className="absolute -bottom-16 left-1/2 -translate-x-1/2 flex items-center gap-2 bg-card border border-border rounded-lg px-4 py-2 shadow-lg">
-                <Button variant="ghost" size="icon" className="h-8 w-8">
+                <Button variant="ghost" size="icon" className="h-8 w-8" onClick={undo} title="Undo">
                   <Undo2 className="h-4 w-4" />
                 </Button>
-                <Button variant="ghost" size="icon" className="h-8 w-8">
+                <Button variant="ghost" size="icon" className="h-8 w-8" onClick={redo} title="Redo">
                   <Redo2 className="h-4 w-4" />
                 </Button>
                 <div className="h-6 w-px bg-border mx-1" />
                 <Button variant="ghost" size="sm" className="h-8">
-                  14%
+                  100%
                 </Button>
                 <div className="h-6 w-px bg-border mx-1" />
                 <Button variant="ghost" size="icon" className="h-8 w-8">
