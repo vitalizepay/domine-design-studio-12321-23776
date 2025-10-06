@@ -1,7 +1,7 @@
 import { CanvasObject } from '@/store/canvasStore';
 import template1 from '@/assets/templates/template-1.png';
 import template2 from '@/assets/templates/template-2.png';
-import template3 from '@/assets/templates/template-3.png';
+
 
 // Define types for template elements without 'id' since those are auto-generated
 type TemplateChild = Omit<CanvasObject, 'id' | 'children'>;
@@ -100,49 +100,4 @@ export const sampleTemplates: Template[] = [
       }
     ]
   },
-  {
-    id: 'template-typography-1',
-    title: 'Stacked Type',
-    thumbnail: template3,
-    category: 'typography',
-    elements: [
-      {
-        type: 'group',
-        x: 250,
-        y: 250,
-        name: 'Typography Stack',
-        children: [
-          {
-            type: 'text',
-            x: 0,
-            y: 0,
-            text: 'DESIGN',
-            fontSize: 56,
-            fontFamily: 'Arial',
-            fill: '#000000',
-            name: 'Title Line 1'
-          },
-          {
-            type: 'text',
-            x: 0,
-            y: 60,
-            text: 'STUDIO',
-            fontSize: 56,
-            fontFamily: 'Arial',
-            fill: '#000000',
-            name: 'Title Line 2'
-          },
-          {
-            type: 'image',
-            x: 80,
-            y: 120,
-            width: 40,
-            height: 40,
-            src: template3,
-            name: 'Decorative Icon'
-          }
-        ]
-      }
-    ]
-  }
 ];
