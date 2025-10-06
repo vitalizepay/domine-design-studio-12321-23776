@@ -3,7 +3,12 @@ import template1 from '@/assets/templates/template-1.png';
 import template2 from '@/assets/templates/template-2.png';
 import template3 from '@/assets/templates/template-3.png';
 
-type TemplateElement = Omit<CanvasObject, 'id'>;
+// Define types for template elements without 'id' since those are auto-generated
+type TemplateChild = Omit<CanvasObject, 'id' | 'children'>;
+
+type TemplateElement = Omit<CanvasObject, 'id' | 'children'> & {
+  children?: TemplateChild[];
+};
 
 export interface Template {
   id: string;

@@ -38,7 +38,10 @@ export const TemplatesPanel = () => {
   const saveHistory = useCanvasStore((state) => state.saveHistory);
 
   const handleGroupedTemplate = (template: typeof sampleTemplates[0]) => {
-    template.elements.forEach(element => addObject(element));
+    template.elements.forEach(element => {
+      // Cast to the expected type since addObject will generate IDs for children
+      addObject(element as Omit<import('@/store/canvasStore').CanvasObject, 'id'>);
+    });
     saveHistory();
     toast.success(`Added "${template.title}" to canvas`);
   };
