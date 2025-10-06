@@ -38,7 +38,6 @@ export const TShirtMockup: React.FC<TShirtMockupProps> = ({
         width: width, 
         height: height,
         pointerEvents: 'none',
-        zIndex: 0,
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center'
