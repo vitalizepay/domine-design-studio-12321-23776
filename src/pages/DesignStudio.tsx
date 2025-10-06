@@ -29,14 +29,21 @@ import { IllustrationsPanel } from "@/components/design-studio/IllustrationsPane
 import { ImagesPanel } from "@/components/design-studio/ImagesPanel";
 import { TexturesPanel } from "@/components/design-studio/TexturesPanel";
 import { AIPanel } from "@/components/design-studio/AIPanel";
-import { LayersPanel } from "@/components/design-studio/LayersPanel";
+import { EnhancedLayersPanel } from "@/components/design-studio/EnhancedLayersPanel";
 import { UploadsPanel } from "@/components/design-studio/UploadsPanel";
 import { BrandKitsPanel } from "@/components/design-studio/BrandKitsPanel";
 import { Canvas } from "@/components/design-studio/Canvas";
+import { ViewSwitcher } from "@/components/design-studio/ViewSwitcher";
+import { TShirtColorPicker } from "@/components/design-studio/TShirtColorPicker";
+import { useCanvasStore } from "@/store/canvasStore";
 
 const DesignStudio = () => {
   const [selectedTool, setSelectedTool] = useState<string>("template");
   const [isPanelOpen, setIsPanelOpen] = useState(true);
+  
+  const undo = useCanvasStore((state) => state.undo);
+  const redo = useCanvasStore((state) => state.redo);
+  const getAllViewsData = useCanvasStore((state) => state.getAllViewsData);
 
   const tools = [
     { id: "template", name: "Templates", icon: Layout },
@@ -66,7 +73,7 @@ const DesignStudio = () => {
       case "ai":
         return <AIPanel />;
       case "layers":
-        return <LayersPanel />;
+        return <EnhancedLayersPanel />;
       case "uploads":
         return <UploadsPanel />;
       case "brand":
@@ -86,10 +93,10 @@ const DesignStudio = () => {
         </div>
         
         <div className="flex items-center gap-2">
-          <Button variant="ghost" size="icon" className="h-9 w-9">
+          <Button variant="ghost" size="icon" className="h-9 w-9" onClick={undo} title="Undo (Ctrl/Cmd+Z)">
             <Undo2 className="h-4 w-4" />
           </Button>
-          <Button variant="ghost" size="icon" className="h-9 w-9">
+          <Button variant="ghost" size="icon" className="h-9 w-9" onClick={redo} title="Redo (Ctrl/Cmd+Y)">
             <Redo2 className="h-4 w-4" />
           </Button>
           <div className="h-6 w-px bg-border mx-1" />
@@ -174,10 +181,13 @@ const DesignStudio = () => {
 
         {/* Canvas - Center */}
         <main className="flex-1 bg-muted/20 overflow-auto">
-          <div className="h-full flex items-center justify-center p-8">
+          <div className="h-full flex flex-col items-center justify-center p-8 gap-4">
+            {/* View Switcher */}
+            <ViewSwitcher />
+            
             <div className="relative">
               {/* Canvas Area */}
-              <div className="w-[700px] h-[700px] bg-card border-2 border-border rounded-lg shadow-lg flex items-center justify-center">
+              <div className="w-[500px] h-[600px] bg-card border-2 border-border rounded-lg shadow-lg flex items-center justify-center overflow-hidden relative">
                 <Canvas />
               </div>
 
@@ -208,6 +218,9 @@ const DesignStudio = () => {
         {/* Right Sidebar - Project Info & Tools */}
         <aside className="w-80 border-l border-border bg-card p-4 overflow-y-auto">
           <div className="space-y-6">
+            {/* T-shirt Color Picker */}
+            <TShirtColorPicker />
+            
             <div>
               <h3 className="text-sm font-semibold text-foreground mb-3">Project Colors</h3>
               <div className="space-y-2">

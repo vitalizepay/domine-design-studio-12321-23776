@@ -71,3 +71,107 @@ Yes, you can!
 To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
 
 Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+
+---
+
+## Design Studio Features
+
+### Multi-View T-shirt Design
+
+The DOMINE Design Studio now supports **multi-view T-shirt design** with the following features:
+
+#### View Management
+- **4 Views**: Front, Left, Right, Back
+- Each view maintains its own canvas state and T-shirt color
+- Switch between views using the View Switcher above the canvas
+- All views can be exported individually
+
+#### T-shirt Mockup & Recoloring
+- White SVG T-shirt mockup by default (front view shown)
+- **Recolor the T-shirt** using:
+  - 6 preset colors (White, Black, Navy, Grey, Red, Olive)
+  - Custom color picker with hex input
+  - "Apply to all views" toggle option
+- Colors update immediately in the active view
+
+#### Grouped Templates
+- Templates are **grouped collections** of elements (text, images, vectors)
+- Click any template to insert it centered in the current view
+- **Ungroup** templates to access individual elements via the Layers panel
+- **Extract elements** from groups to save them to Assets for reuse
+
+Sample templates include:
+1. **Vintage Badge** - Text hierarchy with multiple layers
+2. **Mountain Scene** - Illustration with caption overlay
+3. **Stacked Typography** - Multiple text elements with decorative icon
+
+#### Transform & Editing Tools
+
+**Mouse Controls:**
+- Click to select objects
+- Drag to move
+- Corner handles to scale/rotate
+- Transform controls appear on selection
+
+**Keyboard Shortcuts:**
+- `Ctrl/Cmd + Z` - Undo
+- `Ctrl/Cmd + Y` or `Ctrl/Cmd + Shift + Z` - Redo
+- `Ctrl/Cmd + D` - Duplicate selected object
+- `Delete` or `Backspace` - Remove selected object
+- `Arrow Keys` - Nudge object 1px
+- `Shift + Arrow Keys` - Nudge object 10px
+
+**Layer Controls (Right Panel):**
+- Visibility toggle (eye icon)
+- Lock/unlock (lock icon)
+- Z-order (up/down arrows)
+- Duplicate (copy icon)
+- Delete (trash icon)
+- Ungroup (for grouped templates)
+
+#### Save & Export
+
+**Save Design:**
+- Click "Save" to store your design with all views
+- Each view's canvas state (Konva JSON) is saved separately
+- T-shirt colors for each view are preserved
+
+**Export Multi-View:**
+- Click "Export" to download all 4 views
+- Exports as separate PNG/SVG files per view
+- Files are bundled into a single ZIP download
+
+**Backend Integration:**
+- Designs can be saved to the backend via Lovable Cloud
+- Each design stores: `{ title, views: { front, left, right, back }, viewColors, previewUrls[] }`
+- API routes: `POST /api/designs` (create) and `PUT /api/designs/:id` (update)
+
+### Template Assets
+
+Sample templates are located in:
+- **Code**: `src/data/sampleTemplates.ts`
+- **Documentation**: `public/sample-templates/README.md`
+
+### Future Integrations
+
+The project is ready for:
+- **AI Generation**: OpenAI/DALL·E integration (add `OPENAI_API_KEY` to Lovable Cloud secrets)
+- **Storage**: File uploads via Lovable Cloud storage
+- **Database**: Design persistence using Lovable Cloud database
+
+To enable AI features, navigate to Project Settings → Secrets and add your API keys.
+
+### Acceptance Checklist
+
+✅ White T-shirt SVG mockup loads by default (front view)  
+✅ Dashed printable area shown on front/back views  
+✅ View switcher toggles between Front/Left/Right/Back  
+✅ Each view maintains independent canvas state and color  
+✅ T-shirt color picker with presets and custom color  
+✅ Clicking templates inserts grouped objects centered on canvas  
+✅ Ungroup functionality splits groups into individual layers  
+✅ Transform controls work (move/scale/rotate)  
+✅ Keyboard shortcuts functional (Undo/Redo/Delete/Duplicate/Nudge)  
+✅ Layers panel shows all objects with visibility/lock/z-order controls  
+✅ Sample grouped templates visible and functional  
+✅ Save/Export functionality ready for backend integration

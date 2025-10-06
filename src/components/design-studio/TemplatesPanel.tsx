@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Search } from "lucide-react";
 import { useCanvasStore } from "@/store/canvasStore";
 import { toast } from "sonner";
+import { sampleTemplates } from "@/data/sampleTemplates";
 
 // Import template images
 import template1 from "@/assets/templates/template-1.png";
@@ -34,20 +35,25 @@ const templates = [
 
 export const TemplatesPanel = () => {
   const addObject = useCanvasStore((state) => state.addObject);
+  const saveHistory = useCanvasStore((state) => state.saveHistory);
+
+  const handleGroupedTemplate = (template: typeof sampleTemplates[0]) => {
+    template.elements.forEach(element => addObject(element));
+    saveHistory();
+    toast.success(`Added "${template.title}" to canvas`);
+  };
 
   const handleTemplateClick = (template: typeof templates[0]) => {
-    // Add template to canvas at center position
     addObject({
-      type: 'template',
-      x: 150, // Center of 500px canvas
+      type: 'image',
+      x: 150,
       y: 200,
       width: 200,
       height: 200,
       src: template.src,
-      rotation: 0,
-      scaleX: 1,
-      scaleY: 1,
+      name: template.name,
     });
+    saveHistory();
     toast.success(`Added "${template.name}" to canvas`);
   };
 
@@ -72,6 +78,20 @@ export const TemplatesPanel = () => {
             {cat}
           </Button>
         ))}
+      </div>
+
+      <div>
+        <h3 className="text-sm font-semibold text-foreground mb-3">GROUPED TEMPLATES</h3>
+        <div className="grid grid-cols-2 gap-2 mb-6">
+          {sampleTemplates.map((template) => (
+            <Card key={template.id} className="aspect-square cursor-pointer overflow-hidden border-border hover:border-primary transition-all group" onClick={() => handleGroupedTemplate(template)}>
+              <img src={template.thumbnail} alt={template.title} className="w-full h-full object-cover" />
+              <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-2">
+                <span className="text-xs text-white">{template.title}</span>
+              </div>
+            </Card>
+          ))}
+        </div>
       </div>
 
       <div>
